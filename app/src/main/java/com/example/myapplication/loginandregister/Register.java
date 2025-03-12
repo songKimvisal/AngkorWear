@@ -45,7 +45,7 @@ public class Register extends AppCompatActivity {
     public void alreadyHaveAccountOnClick(View view)
     {
         Intent intent = new Intent();
-        intent.setClass(this, login.class);
+        intent.setClass(this, Login.class);
         startActivity(intent);
     }
 }

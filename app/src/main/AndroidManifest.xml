@@ -16,7 +16,7 @@
             android:name=".loginandregister.Register"
             android:exported="false" />
         <activity
-            android:name=".loginandregister.login"
+            android:name=".loginandregister.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
