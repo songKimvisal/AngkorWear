@@ -7,10 +7,10 @@ An Android-based e-commerce platform built with Java, designed for seamless buyi
 ## ✨ Functionality
 
 ### Customer Features
-- [x] Select user option before login
-- [x] Switch Account between User and Admin
-- [x] **Register a new account** - Sign up to start shopping.
-- [x] **Login into the system** - Secure access to your profile.
+- [ ] Select user option before login
+- [ ] Switch Account between User and Admin
+- [ ] **Register a new account** - Sign up to start shopping.
+- [ ] **Login into the system** - Secure access to your profile.
 - [ ] **Browse through the list of items** - Explore available products.
 - [ ] **Buy items** - Add products to your cart and purchase.
 - [ ] **Generate an invoice of items** - View your purchase summary.
