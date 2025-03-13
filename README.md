@@ -1,5 +1,7 @@
 # 🛒 Ecommerce Mobile App Project
 
+now testing the ssh git method
+
 An Android-based e-commerce platform built with Java, designed for seamless buying and selling experiences. This collaborative project is hosted on GitHub and leverages modern tools for development and design.
 
 ## ✨ Functionality
