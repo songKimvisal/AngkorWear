@@ -55,7 +55,7 @@ To set up and run this project, ensure you have:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/songKimvisal/E-commerce_App2.git
+   git clone https://github.com/songKimvisal/E-commerce-App_2.git
    ```
 2. **Open in Android Studio**:
     - Launch Android Studio and select "Open an existing project".
