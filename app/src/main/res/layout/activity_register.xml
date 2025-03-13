@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".loginandregister.Register">
+    tools:context=".loginAndRegister.Register">
     <include
         android:id="@+id/toolbarWithBackArrow"
         layout="@layout/toolbar_with_back_arrow"/>
@@ -110,7 +110,7 @@
         app:layout_constraintTop_toBottomOf="@+id/phoneLayout" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/goTologinBtn"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="40dp"
