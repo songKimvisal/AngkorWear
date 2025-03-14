@@ -14,13 +14,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.R;
+import com.example.myapplication.dataBase.DatabaseHelper;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class AdminLogin extends AppCompatActivity {
     private Toolbar toolbar;
-    private final int ADMIN_CODE = 1111;
     private Button adminLoginButton;
-    private TextInputEditText adminCodeTextInput;
+    private TextInputEditText adminEmailTextInput;
+    private TextInputEditText adminPasswordTextInput;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,30 +54,28 @@ public class AdminLogin extends AppCompatActivity {
         });
 
         adminLoginButton = findViewById(R.id.AdminLoginButton);
-        adminCodeTextInput = findViewById(R.id.adminCodeTextInput);
+        adminEmailTextInput = findViewById(R.id.adminEmailTextInput);
+        adminPasswordTextInput = findViewById(R.id.adminPasswordTextInput);
+        dbHelper = new DatabaseHelper(this);
 
         adminLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String adminCodeStr = adminCodeTextInput.getText().toString().trim();
-                if (!adminCodeStr.isEmpty()) {
-                    try {
-                        int enteredAdminCode = Integer.parseInt(adminCodeStr);
-                        if (enteredAdminCode == ADMIN_CODE) {
-                            // Admin code is correct, navigate to admin functionality
-                            Toast.makeText(AdminLogin.this, "Admin Login Successful", Toast.LENGTH_SHORT).show();
-                            //Replace AdminActivity.class with the correct activity name
-                            Intent intent = new Intent(AdminLogin.this, AdminActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast.makeText(AdminLogin.this, "Incorrect Admin Code", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(AdminLogin.this, "Invalid Admin Code", Toast.LENGTH_SHORT).show();
+                String email = adminEmailTextInput.getText().toString().trim();
+                String password = adminPasswordTextInput.getText().toString().trim();
+
+                if (!email.isEmpty() && !password.isEmpty()) {
+                    // Use the specific email and password you want to check.
+                    if (email.equals("Admin@gmail.com") && password.equals("Admin1111")) {
+                        Toast.makeText(AdminLogin.this, "Admin Login Successful", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(AdminLogin.this, AdminActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(AdminLogin.this, "Invalid Admin Credentials", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(AdminLogin.this, "Please enter Admin Code", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminLogin.this, "Please enter email and password", Toast.LENGTH_SHORT).show();
                 }
             }
         });
