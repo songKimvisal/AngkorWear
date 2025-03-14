@@ -2,4 +2,6 @@
     <string name="app_name">My Application</string>
     <string name="forward_button_description">Go to the next step</string>
     <string name="login_button_description">Log in to your account</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
