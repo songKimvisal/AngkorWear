@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.myapplication.Admin.AdminLogin;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.dataBase.DatabaseHelper;
@@ -36,7 +37,7 @@ public class Login extends AppCompatActivity {
             return insets;
         });
 
-        editTextEmail = findViewById(R.id.loginTextEmail); // Corrected ID
+        editTextEmail = findViewById(R.id.loginTextEmail);
         editTextPassword = findViewById(R.id.loginTextPasswprd); // Corrected ID
         buttonLogin = findViewById(R.id.LoginBtn);
         databaseHelper = new DatabaseHelper(this);
@@ -52,9 +53,9 @@ public class Login extends AppCompatActivity {
                 } else {
                     if (databaseHelper != null && databaseHelper.checkUser(email, password)) {
                         Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                         Intent intent = new Intent(Login.this, MainActivity.class);
-                         startActivity(intent);
-                         finish(); // Close the login activity
+                        Intent intent = new Intent(Login.this, MainActivity.class);
+                        startActivity(intent);
+                        finish(); // Close the login activity
                     } else {
                         Toast.makeText(Login.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                     }
@@ -65,6 +66,11 @@ public class Login extends AppCompatActivity {
 
     public void RegisterOnClickBtn(View view) {
         Intent intent = new Intent(this, Register.class);
+        startActivity(intent);
+    }
+
+    public void AdminLoginOnClick(View view) {
+        Intent intent = new Intent(this, AdminLogin.class);
         startActivity(intent);
     }
 }

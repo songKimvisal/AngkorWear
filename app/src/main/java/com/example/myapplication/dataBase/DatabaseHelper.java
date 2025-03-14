@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_PHONE = "phone";
 
+
     private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_USERNAME + " TEXT,"
