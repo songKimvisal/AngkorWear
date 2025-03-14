@@ -1,4 +1,4 @@
-package com.example.myapplication.loginAndRegister;
+package com.example.myapplication.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,10 +13,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.myapplication.Admin.AdminLogin;
+import com.example.myapplication.admin.AdminLogin;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.dataBase.DatabaseHelper;
+import com.example.myapplication.database.DatabaseHelper;
 
 public class Login extends AppCompatActivity {
 
