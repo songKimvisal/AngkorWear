@@ -13,16 +13,16 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name=".Admin.AdminActivity"
+            android:name=".admin.AdminActivity"
             android:exported="false" />
         <activity
-            android:name=".Admin.AdminLogin"
+            android:name=".admin.AdminLogin"
             android:exported="false" />
         <activity
-            android:name=".loginAndRegister.Register"
+            android:name=".auth.Register"
             android:exported="false" />
         <activity
-            android:name=".loginAndRegister.Login"
+            android:name=".auth.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

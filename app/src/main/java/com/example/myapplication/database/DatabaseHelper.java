@@ -1,4 +1,4 @@
-package com.example.myapplication.dataBase;
+package com.example.myapplication.database;
 
 
 import android.content.ContentValues;

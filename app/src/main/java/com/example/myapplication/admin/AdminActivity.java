@@ -1,4 +1,4 @@
-package com.example.myapplication.Admin;
+package com.example.myapplication.admin;
 
 import android.os.Bundle;
 
