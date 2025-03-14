@@ -14,7 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.R;
-import com.example.myapplication.dataBase.DatabaseHelper;
+import com.example.myapplication.database.DatabaseHelper;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class AdminLogin extends AppCompatActivity {
