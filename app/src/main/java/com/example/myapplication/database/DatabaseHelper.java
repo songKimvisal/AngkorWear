@@ -1,6 +1,5 @@
 package com.example.myapplication.database;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "User.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2; // Increment version!
 
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_ID = "id";
@@ -18,14 +17,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_PHONE = "phone";
-
+    private static final String COLUMN_RESET_TOKEN = "reset_token"; // New column
 
     private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_USERNAME + " TEXT,"
             + COLUMN_EMAIL + " TEXT,"
             + COLUMN_PASSWORD + " TEXT,"
-            + COLUMN_PHONE + " TEXT" + ")";
+            + COLUMN_PHONE + " TEXT,"
+            + COLUMN_RESET_TOKEN + " TEXT" + ")"; // Add reset_token
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,8 +38,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_USERS + " ADD COLUMN " + COLUMN_RESET_TOKEN + " TEXT");
+        }
     }
 
     public boolean insertUser(String username, String email, String password, String phone) {
@@ -74,4 +75,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public boolean checkEmailExists(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ?", new String[]{email});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return exists;
+    }
+
+    public void storeResetToken(String email, String token) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_RESET_TOKEN, token);
+        db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+        db.close();
+    }
+
+    public String getEmailFromResetToken(String token) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_EMAIL + " FROM " + TABLE_USERS + " WHERE " + COLUMN_RESET_TOKEN + " = ?", new String[]{token});
+        String email = null;
+        if (cursor.moveToFirst()) {
+            email = cursor.getString(0);
+        }
+        cursor.close();
+        db.close();
+        return email;
+    }
+
+    public boolean updatePassword(String email, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PASSWORD, password);
+        int rowsAffected = db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    public void clearResetToken(String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_RESET_TOKEN, (String) null); // Clear the token
+        db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+        db.close();
+    }
 }

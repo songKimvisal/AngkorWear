@@ -62,6 +62,15 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+
+        // Forget Password Click Listener
+        findViewById(R.id.Forget_PasswordLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, ForgetPassword.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void RegisterOnClickBtn(View view) {
