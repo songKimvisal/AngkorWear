@@ -36,6 +36,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.android.material:material:<latest_version>")
+    implementation ("androidx.cardview:cardview:<latest_version>")
     implementation("com.github.bumptech.glide:glide:4.14.2")
     // Skip this if you don't want to use integration libraries or configure Glide.
     annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")

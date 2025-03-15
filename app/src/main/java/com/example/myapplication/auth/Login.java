@@ -1,6 +1,8 @@
 package com.example.myapplication.auth;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -42,34 +44,34 @@ public class Login extends AppCompatActivity {
         buttonLogin = findViewById(R.id.LoginBtn);
         databaseHelper = new DatabaseHelper(this);
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = editTextEmail.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
+        buttonLogin.setOnClickListener(v -> {
+            String email = editTextEmail.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
 
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(Login.this, "Please enter email and password", Toast.LENGTH_SHORT).show();
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(Login.this, "Please enter email and password", Toast.LENGTH_SHORT).show();
+            } else {
+                if (databaseHelper != null && databaseHelper.checkUser(email, password)) {
+                    // Store email in SharedPreferences after successful login
+                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("user_email", email); // Save email during login
+                    editor.apply();
+
+                    Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    startActivity(intent);
+                    finish(); // Close the login activity
                 } else {
-                    if (databaseHelper != null && databaseHelper.checkUser(email, password)) {
-                        Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Login.this, MainActivity.class);
-                        startActivity(intent);
-                        finish(); // Close the login activity
-                    } else {
-                        Toast.makeText(Login.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(Login.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         // Forget Password Click Listener
-        findViewById(R.id.Forget_PasswordLayout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this, ForgetPassword.class);
-                startActivity(intent);
-            }
+        findViewById(R.id.Forget_PasswordLayout).setOnClickListener(v -> {
+            Intent intent = new Intent(Login.this, ForgetPassword.class);
+            startActivity(intent);
         });
     }
 

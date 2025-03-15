@@ -6,10 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.myapplication.profile.User;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "User.db";
-    private static final int DATABASE_VERSION = 2; // Increment version!
+    private static final int DATABASE_VERSION = 2;
 
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_ID = "id";
@@ -17,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_PHONE = "phone";
-    private static final String COLUMN_RESET_TOKEN = "reset_token"; // New column
+    private static final String COLUMN_RESET_TOKEN = "reset_token";
 
     private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -25,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_EMAIL + " TEXT,"
             + COLUMN_PASSWORD + " TEXT,"
             + COLUMN_PHONE + " TEXT,"
-            + COLUMN_RESET_TOKEN + " TEXT" + ")"; // Add reset_token
+            + COLUMN_RESET_TOKEN + " TEXT" + ")";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -56,23 +58,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean checkUser(String email, String password) {
-        SQLiteDatabase db = null;
-        Cursor cursor = null;
-        try {
-            db = this.getReadableDatabase();
-            cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?", new String[]{email, password});
-            return cursor.getCount() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            if (db != null) {
-                db.close();
-            }
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ? AND " + COLUMN_PASSWORD + " = ?", new String[]{email, password});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return exists;
+    }
+
+    public User getUserDetails(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_USERNAME + ", " + COLUMN_EMAIL + " FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ?", new String[]{email});
+
+        User user = null;
+        if (cursor.moveToFirst()) {
+            user = new User(
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USERNAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL))
+            );
         }
+        cursor.close();
+        db.close();
+        return user;
     }
 
     public boolean checkEmailExists(String email) {
@@ -80,7 +87,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ?", new String[]{email});
         boolean exists = cursor.getCount() > 0;
         cursor.close();
-        db.close();
         return exists;
     }
 
@@ -89,35 +95,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_RESET_TOKEN, token);
         db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
-        db.close();
     }
 
-    public String getEmailFromResetToken(String token) {
+    // Fetch the email associated with a given reset token
+    public String getEmailFromResetToken(String resetToken) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + COLUMN_EMAIL + " FROM " + TABLE_USERS + " WHERE " + COLUMN_RESET_TOKEN + " = ?", new String[]{token});
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_EMAIL + " FROM " + TABLE_USERS + " WHERE " + COLUMN_RESET_TOKEN + " = ?", new String[]{resetToken});
+
         String email = null;
         if (cursor.moveToFirst()) {
-            email = cursor.getString(0);
+            email = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL));
         }
         cursor.close();
         db.close();
         return email;
     }
 
-    public boolean updatePassword(String email, String password) {
+    // Update the password of a user
+    public boolean updatePassword(String email, String newPassword) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_PASSWORD, password);
+        values.put(COLUMN_PASSWORD, newPassword);
         int rowsAffected = db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
         db.close();
         return rowsAffected > 0;
     }
 
+    // Clear the reset token after password reset
     public void clearResetToken(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_RESET_TOKEN, (String) null); // Clear the token
+        values.put(COLUMN_RESET_TOKEN, (String) null); // Set to null
         db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
         db.close();
     }
+
 }
