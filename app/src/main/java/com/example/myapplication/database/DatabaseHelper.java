@@ -68,13 +68,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public User getUserDetails(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + COLUMN_USERNAME + ", " + COLUMN_EMAIL + " FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ?", new String[]{email});
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_USERNAME + ", " + COLUMN_EMAIL + ", " + COLUMN_PASSWORD + " FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ?", new String[]{email});
 
         User user = null;
         if (cursor.moveToFirst()) {
             user = new User(
                     cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USERNAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL))
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD))  // Add password to User
             );
         }
         cursor.close();
@@ -128,6 +129,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_RESET_TOKEN, (String) null); // Set to null
         db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
         db.close();
+    }
+    public boolean updateUserDetails(String email, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EMAIL, email);   // COLUMN_EMAIL and COLUMN_PASSWORD should be column names in your DB
+        values.put(COLUMN_PASSWORD, password);
+
+        int rowsAffected = db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{email});
+        db.close();
+        return rowsAffected > 0;  // Return true if update was successful
     }
 
 }
