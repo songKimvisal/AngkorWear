@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.myapplication.activities.EditProfileActivity;
 import com.example.myapplication.auth.Login;
 import com.example.myapplication.R;
 import com.example.myapplication.database.DatabaseHelper;
@@ -19,6 +22,7 @@ public class ProfileFragment extends Fragment {
 
     private TextView usernameTextView, emailTextView;
     private DatabaseHelper dbHelper;
+    private static final int REQUEST_CODE_EDIT_PROFILE = 1;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,11 +61,21 @@ public class ProfileFragment extends Fragment {
     }
 
     public void editProfileOnClick() {
-        if (getActivity() != null) {
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new EditProfileFragment())
-                    .addToBackStack(null)
-                    .commit();
+        Intent intent = new Intent(requireContext(), EditProfileActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);  // Use startActivityForResult
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_EDIT_PROFILE && resultCode == getActivity().RESULT_OK) {
+            // Retrieve the success message from EditProfileActivity
+            String message = data.getStringExtra("account_update_message");
+            if (message != null) {
+                // Show a toast with the success message
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
