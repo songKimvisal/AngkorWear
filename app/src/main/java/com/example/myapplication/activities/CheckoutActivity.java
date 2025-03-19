@@ -1,5 +1,6 @@
 package com.example.myapplication.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -8,6 +9,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.CartAdapter;
 import com.example.myapplication.models.CartItem;
+import com.example.myapplication.utils.CartManager;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -39,11 +42,24 @@ public class CheckoutActivity extends AppCompatActivity {
         // Set up the Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Enable the back button
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("Checkout");
         }
+
+        // Handle back press using OnBackPressedDispatcher
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
+                intent.putExtra("return_to", "cart"); // Return to CartFragment
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         // Initialize views
         orderSummaryRecyclerView = findViewById(R.id.checkout_order_summary);
@@ -86,15 +102,16 @@ public class CheckoutActivity extends AppCompatActivity {
                         "Order confirmed! Shipping to: " + shippingAddress + "\nPayment Method: " + paymentMethod,
                         Toast.LENGTH_LONG).show();
 
+                // Clear the cart after confirmation
+                CartManager.getInstance().clearCart();
+
+                // Return to CartFragment
+                Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
+                intent.putExtra("return_to", "cart");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 finish();
             }
         });
-    }
-
-    // Handle the back button press
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }
