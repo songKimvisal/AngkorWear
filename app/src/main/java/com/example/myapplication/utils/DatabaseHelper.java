@@ -47,4 +47,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_PRODUCTS, null, values);
         db.close();
     }
+    public int deleteProductByName(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(TABLE_PRODUCTS, COLUMN_NAME + " = ?", new String[]{name});
+        db.close();
+        return rowsDeleted;
+    }
 }
