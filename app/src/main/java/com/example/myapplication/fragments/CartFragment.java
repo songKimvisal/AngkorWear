@@ -28,6 +28,7 @@ public class CartFragment extends Fragment {
     private MaterialButton checkoutButton;
     private ArrayList<CartItem> cartItems;
     private double totalPrice;
+    private CartAdapter cartAdapter;
 
     @Nullable
     @Override
@@ -48,7 +49,7 @@ public class CartFragment extends Fragment {
 
         // Set up RecyclerView
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        CartAdapter cartAdapter = new CartAdapter(cartItems);
+        cartAdapter = new CartAdapter(cartItems);
         cartRecyclerView.setAdapter(cartAdapter);
 
         // Checkout button click listener
@@ -64,5 +65,16 @@ public class CartFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refresh cart data when returning to CartFragment
+        CartManager cartManager = CartManager.getInstance();
+        cartItems.clear();
+        cartItems.addAll(cartManager.getCartItems());
+        totalPrice = cartManager.getTotalPrice();
+        cartAdapter.notifyDataSetChanged();
     }
 }

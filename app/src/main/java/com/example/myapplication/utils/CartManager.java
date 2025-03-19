@@ -23,6 +23,15 @@ public class CartManager {
     }
 
     public void addToCart(CartItem item) {
+        // Check if the product already exists in the cart
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getName().equals(item.getName())) {
+                cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
+                totalPrice += item.getPrice() * item.getQuantity();
+                return;
+            }
+        }
+        // If the product doesn't exist, add it as a new item
         cartItems.add(item);
         totalPrice += item.getPrice() * item.getQuantity();
     }

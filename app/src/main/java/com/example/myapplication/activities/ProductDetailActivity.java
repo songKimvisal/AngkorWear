@@ -2,6 +2,7 @@ package com.example.myapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 public class ProductDetailActivity extends AppCompatActivity {
     private Product product;
+    private int quantity = 1; // Default quantity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +42,41 @@ public class ProductDetailActivity extends AppCompatActivity {
         ImageView productImage = findViewById(R.id.product_image);
         TextView productName = findViewById(R.id.product_name);
         TextView productPrice = findViewById(R.id.product_price);
+        TextView productDescription = findViewById(R.id.product_description);
+        Button decrementButton = findViewById(R.id.decrement_quantity_button);
+        TextView quantityText = findViewById(R.id.quantity_text);
+        Button incrementButton = findViewById(R.id.increment_quantity_button);
         MaterialButton addToCartButton = findViewById(R.id.add_to_cart_button);
         MaterialButton favoriteButton = findViewById(R.id.favorite_button);
         MaterialButton checkoutButton = findViewById(R.id.checkout_button);
 
+        // Set product details
         productName.setText(product.getName());
         productPrice.setText("$" + product.getPrice());
+        productDescription.setText(product.getDescription());
         Glide.with(this).load(product.getImageUrl()).into(productImage);
+
+        // Set initial quantity
+        quantityText.setText(String.valueOf(quantity));
+
+        // Quantity selector buttons
+        decrementButton.setOnClickListener(v -> {
+            if (quantity > 1) {
+                quantity--;
+                quantityText.setText(String.valueOf(quantity));
+            }
+        });
+
+        incrementButton.setOnClickListener(v -> {
+            quantity++;
+            quantityText.setText(String.valueOf(quantity));
+        });
 
         // Add to Cart button
         addToCartButton.setOnClickListener(v -> {
-            CartItem cartItem = new CartItem(product.getName(), product.getPrice(), 1);
+            CartItem cartItem = new CartItem(product.getName(), product.getPrice(), quantity);
             CartManager.getInstance().addToCart(cartItem);
-            Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Added " + quantity + " " + product.getName() + "(s) to Cart", Toast.LENGTH_SHORT).show();
         });
 
         // Favorite button

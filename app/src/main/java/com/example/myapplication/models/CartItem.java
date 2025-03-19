@@ -1,7 +1,7 @@
 package com.example.myapplication.models;
 
-import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.Parcel;
 
 public class CartItem implements Parcelable {
     private String name;
@@ -14,6 +14,25 @@ public class CartItem implements Parcelable {
         this.quantity = quantity;
     }
 
+    // Getters
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    // Setter for quantity
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    // Parcelable implementation
     protected CartItem(Parcel in) {
         name = in.readString();
         price = in.readDouble();
@@ -33,27 +52,14 @@ public class CartItem implements Parcelable {
     };
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeDouble(price);
         dest.writeInt(quantity);
     }
 
-    // Getters
-    public String getName() {
-        return name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public int getQuantity() {
-        return quantity;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }

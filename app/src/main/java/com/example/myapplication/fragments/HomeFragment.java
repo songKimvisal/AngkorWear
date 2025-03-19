@@ -44,8 +44,8 @@ public class HomeFragment extends Fragment {
 
     private List<Product> getSampleProducts() {
         List<Product> list = new ArrayList<>();
-        list.add(new Product("1", "Shirt", 29.99, "https://example.com/shirt.jpg", "Men"));
-        list.add(new Product("2", "Dress", 49.99, "https://example.com/dress.jpg", "Women"));
+        list.add(new Product("1", "Shirt", 29.99, "https://placecats.com/millie/300/150", "Men", "Hello"));
+        list.add(new Product("2", "Dress", 49.99, "https://placecats.com/millie/300/150", "Women", "Hello"));
         return list;
     }
 }

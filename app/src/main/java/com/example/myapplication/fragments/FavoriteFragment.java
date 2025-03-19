@@ -35,7 +35,7 @@ public class FavoriteFragment extends Fragment {
 
     private List<Product> getSampleFavorites() {
         List<Product> list = new ArrayList<>();
-        list.add(new Product("2", "Dress", 49.99, "https://example.com/dress.jpg", "Women"));
+        list.add(new Product("2", "Dress", 49.99, "https://placecats.com/millie/300/150", "Women", "hello"));
         return list;
     }
 }

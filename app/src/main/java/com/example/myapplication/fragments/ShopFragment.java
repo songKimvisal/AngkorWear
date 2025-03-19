@@ -95,9 +95,9 @@ public class ShopFragment extends Fragment {
 
     private List<Product> getSampleProducts() {
         List<Product> list = new ArrayList<>();
-        list.add(new Product("1", "Shirt", 29.99, "https://placecats.com/300/200", "Men"));
-        list.add(new Product("2", "Dress", 49.99, "https://placecats.com/300/200", "Women"));
-        list.add(new Product("3", "Kids Jacket", 19.99, "https://placecats.com/300/200", "Kids"));
+        list.add(new Product("1", "Shirt", 29.99, "https://placecats.com/300/200", "Men", "A comfortable cotton shirt for men, perfect for casual wear."));
+        list.add(new Product("2", "Dress", 49.99, "https://placecats.com/300/200", "Women", "An elegant dress for women, ideal for parties and special occasions."));
+        list.add(new Product("3", "Kids Jacket", 19.99, "https://placecats.com/300/200", "Kids", "A warm jacket for kids, great for outdoor activities in cool weather."));
         return list;
     }
 }

@@ -5,34 +5,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.R;
 import com.example.myapplication.models.CartItem;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
+    private List<CartItem> cartItems;
 
-    private ArrayList<CartItem> cartItems;
-
-    public CartAdapter(ArrayList<CartItem> cartItems) {
+    public CartAdapter(List<CartItem> cartItems) {
         this.cartItems = cartItems;
     }
 
-    @NonNull
     @Override
-    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_2, parent, false);
+    public CartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart, parent, false);
         return new CartViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        CartItem item = cartItems.get(position);
-        holder.text1.setText(item.getName());
-        holder.text2.setText(String.format("Price: $%.2f | Quantity: %d", item.getPrice(), item.getQuantity()));
+    public void onBindViewHolder(CartViewHolder holder, int position) {
+        CartItem cartItem = cartItems.get(position);
+        holder.cartItemName.setText(cartItem.getName());
+        holder.cartItemQuantity.setText("Qty: " + cartItem.getQuantity());
+        holder.cartItemPrice.setText(String.format("$%.2f", cartItem.getPrice() * cartItem.getQuantity()));
     }
 
     @Override
@@ -41,12 +39,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     static class CartViewHolder extends RecyclerView.ViewHolder {
-        TextView text1, text2;
+        TextView cartItemName, cartItemQuantity, cartItemPrice;
 
-        public CartViewHolder(@NonNull View itemView) {
+        CartViewHolder(View itemView) {
             super(itemView);
-            text1 = itemView.findViewById(android.R.id.text1);
-            text2 = itemView.findViewById(android.R.id.text2);
+            cartItemName = itemView.findViewById(R.id.cart_item_name);
+            cartItemQuantity = itemView.findViewById(R.id.cart_item_quantity);
+            cartItemPrice = itemView.findViewById(R.id.cart_item_price);
         }
     }
 }
