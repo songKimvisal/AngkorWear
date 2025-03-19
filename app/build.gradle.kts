@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.android.material:material:1.11.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation ("com.google.android.material:material:<latest_version>")
     implementation ("androidx.cardview:cardview:<latest_version>")
