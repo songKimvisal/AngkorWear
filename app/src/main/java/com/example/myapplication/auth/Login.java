@@ -16,7 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.admin.AdminLogin;
-import com.example.myapplication.MainActivity;
+import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.database.DatabaseHelper;
 
