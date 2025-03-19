@@ -66,9 +66,9 @@ public class AdminLogin extends AppCompatActivity {
 
                 if (!email.isEmpty() && !password.isEmpty()) {
                     // Use the specific email and password you want to check.
-                    if (email.equals("A") && password.equals("1")) {
+                    if (email.equals("Admin@gmail.com") && password.equals("Admin1111")) {
                         Toast.makeText(AdminLogin.this, "Admin Login Successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(AdminLogin.this, AdminPanelActivity.class);
+                        Intent intent = new Intent(AdminLogin.this, AdminActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
