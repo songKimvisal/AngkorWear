@@ -1,13 +1,11 @@
 package com.example.myapplication.fragments;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ProductAdapter;
 import com.example.myapplication.models.Product;
+import com.example.myapplication.utils.DatabaseHelper;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -29,6 +28,7 @@ public class ShopFragment extends Fragment {
     private ProductAdapter adapter;
     private List<Product> productList, filteredList;
     private Chip chipWomen, chipMen, chipKids, chipSortPrice;
+    private DatabaseHelper dbHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,9 +40,13 @@ public class ShopFragment extends Fragment {
         chipKids = view.findViewById(R.id.chip_kids);
         chipSortPrice = view.findViewById(R.id.chip_sort_price);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        productList = getSampleProducts();
+        // Initialize DatabaseHelper
+        dbHelper = new DatabaseHelper(getContext());
+
+        // Fetch products from the database
+        productList = dbHelper.getAllProducts();
         filteredList = new ArrayList<>(productList);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter = new ProductAdapter(getContext(), filteredList);
         recyclerView.setAdapter(adapter);
 
@@ -93,11 +97,11 @@ public class ShopFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    private List<Product> getSampleProducts() {
-        List<Product> list = new ArrayList<>();
-        list.add(new Product("1", "Shirt", 29.99, "https://placecats.com/300/200", "Men", "A comfortable cotton shirt for men, perfect for casual wear."));
-        list.add(new Product("2", "Dress", 49.99, "https://placecats.com/300/200", "Women", "An elegant dress for women, ideal for parties and special occasions."));
-        list.add(new Product("3", "Kids Jacket", 19.99, "https://placecats.com/300/200", "Kids", "A warm jacket for kids, great for outdoor activities in cool weather."));
-        return list;
+    @Override
+    public void onDestroy() {
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
+        super.onDestroy();
     }
 }

@@ -43,39 +43,43 @@
                 android:columnCount="2"
                 android:paddingHorizontal="8dp">
 
+                <!-- First Block: Add Product -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardAddRemoveCategory"
                     style="@style/AdminPanelCard"
                     app:cardBackgroundColor="#28a745"
-                    android:contentDescription="Add or remove product categories">
+                    android:contentDescription="Add a new product">
                     <LinearLayout style="@style/AdminPanelCardContent">
-                        <TextView style="@style/AdminPanelCardIcon" android:text="➕➖" />
-                        <TextView style="@style/AdminPanelCardText" android:text="Add / Remove Category" />
+                        <TextView style="@style/AdminPanelCardIcon" android:text="➕" />
+                        <TextView style="@style/AdminPanelCardText" android:text="Add Product" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!-- Second Block: Edit Product -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardAddRemoveItems"
                     style="@style/AdminPanelCard"
                     app:cardBackgroundColor="#e83e8c"
-                    android:contentDescription="Add or remove product items">
+                    android:contentDescription="Edit existing product items">
                     <LinearLayout style="@style/AdminPanelCardContent">
-                        <TextView style="@style/AdminPanelCardIcon" android:text="📦" />
-                        <TextView style="@style/AdminPanelCardText" android:text="Add / Remove Items" />
+                        <TextView style="@style/AdminPanelCardIcon" android:text="✏️" />
+                        <TextView style="@style/AdminPanelCardText" android:text="Edit Product" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!-- Third Block: Delete Product -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardEditItem"
                     style="@style/AdminPanelCard"
                     app:cardBackgroundColor="#0056b3"
-                    android:contentDescription="Edit existing product items">
+                    android:contentDescription="Delete existing product items">
                     <LinearLayout style="@style/AdminPanelCardContent">
-                        <TextView style="@style/AdminPanelCardIcon" android:text="✏️" />
-                        <TextView style="@style/AdminPanelCardText" android:text="Edit Item" />
+                        <TextView style="@style/AdminPanelCardIcon" android:text="🗑️" />
+                        <TextView style="@style/AdminPanelCardText" android:text="Delete Product" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!-- Fourth Block: User List (No Change) -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardUserList"
                     style="@style/AdminPanelCard"

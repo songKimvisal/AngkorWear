@@ -48,13 +48,19 @@ public class AdminPanelActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         Intent intent = null;
         if (v.getId() == R.id.cardAddRemoveCategory) {
-            intent = new Intent(this, AddRemoveCategoryActivity.class); // Replace with your actual activity
+            // First Block: Add Product
+            intent = new Intent(this, AddRemoveItemActivity.class);
+            intent.putExtra("mode", "add"); // Indicate that the activity should focus on adding
         } else if (v.getId() == R.id.cardAddRemoveItems) {
-            intent = new Intent(this, AddRemoveItemActivity.class); // Replace with your actual activity
+            // Second Block: Edit Product
+            intent = new Intent(this, EditItemActivity.class);
         } else if (v.getId() == R.id.cardEditItem) {
-            intent = new Intent(this, EditItemActivity.class); // Replace with your actual activity
+            // Third Block: Delete Product
+            intent = new Intent(this, AddRemoveItemActivity.class);
+            intent.putExtra("mode", "delete"); // Indicate that the activity should focus on deleting
         } else if (v.getId() == R.id.cardUserList) {
-            intent = new Intent(this, UserListActivity.class); // Replace with your actual activity
+            // Fourth Block: User List
+            intent = new Intent(this, UserListActivity.class);
         }
 
         if (intent != null) {
