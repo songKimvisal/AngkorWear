@@ -1,12 +1,9 @@
 package com.example.myapplication.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-
 import com.example.myapplication.R;
 import com.example.myapplication.fragments.CartFragment;
 import com.example.myapplication.fragments.FavoriteFragment;
@@ -16,7 +13,6 @@ import com.example.myapplication.fragments.ShopFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-
     private BottomNavigationView bottomNav;
     private Toolbar toolbar;
     private int lastSelectedTabId = R.id.nav_home; // Default to Home tab
