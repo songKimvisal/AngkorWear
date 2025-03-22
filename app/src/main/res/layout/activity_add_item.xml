@@ -9,8 +9,7 @@
 
     <include
         android:id="@+id/toolbarWithBackArrow"
-        layout="@layout/toolbar_with_back_arrow"
-        app:layout_constraintTop_toTopOf="parent" />
+        layout="@layout/toolbar_with_back_arrow"/>
 
     <ScrollView
         android:layout_width="0dp"

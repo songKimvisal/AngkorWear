@@ -5,4 +5,5 @@
     <color name="Candy_apple_red">#E8332C</color>
     <color name="night">#111111</color>
     <color name="custom_toolbar_color">#FF6D68</color>
+    <color name="background_gray">#F5F5F5</color>
 </resources>

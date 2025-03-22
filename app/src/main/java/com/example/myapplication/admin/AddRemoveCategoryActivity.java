@@ -37,6 +37,7 @@ public class AddRemoveCategoryActivity extends AppCompatActivity {
 
         // Enable the back arrow
         if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Admin");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }

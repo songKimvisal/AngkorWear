@@ -3,6 +3,7 @@ package com.example.myapplication.admin;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -10,12 +11,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.R;
@@ -34,17 +32,23 @@ public class AddItemActivity extends AppCompatActivity {
     private ImageView imageViewItem;
     private DatabaseHelper dbHelper;
     private CategoryViewModel categoryViewModel;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_item);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        toolbar = findViewById(R.id.toolbarWithBackArrow);
+        setSupportActionBar(toolbar);
+
+        // Enable the back arrow
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Add item ");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
 
         // Initialize UI elements
         editTextItemName = findViewById(R.id.editTextItemName);
@@ -160,13 +164,6 @@ public class AddItemActivity extends AppCompatActivity {
             dbHelper.addProduct(productId, name, price, imageUrl, category, description);
             Log.d(TAG, "Product added successfully - ID: " + productId);
 
-            // Verify immediately
-            List<Product> products = dbHelper.getAllProducts();
-            Log.d(TAG, "Total products in DB after add: " + products.size());
-            for (Product p : products) {
-                Log.d(TAG, "Product: " + p.getName() + ", Image: " + p.getImageUrl());
-            }
-
             Toast.makeText(this, "Item added successfully", Toast.LENGTH_SHORT).show();
             clearInputFields();
             finish();
@@ -191,4 +188,14 @@ public class AddItemActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // Handle the back arrow click
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

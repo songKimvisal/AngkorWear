@@ -1,8 +1,11 @@
 package com.example.myapplication.admin;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,14 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.EditProductAdapter;
@@ -34,8 +34,10 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
     private RecyclerView recyclerViewProducts;
     private EditProductAdapter adapter;
     private List<Product> productList;
+    private List<Product> filteredProductList; // For search functionality
     private DatabaseHelper dbHelper;
     private CategoryViewModel categoryViewModel;
+    private EditText searchEditText; // Added search field
 
     // Edit form views
     private LinearLayout editForm;
@@ -43,20 +45,25 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
     private Spinner spinnerCategory;
     private Button buttonSave, buttonCancel;
     private Product selectedProduct;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_item);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        toolbar = findViewById(R.id.toolbarWithBackArrow);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Admin");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         // Initialize UI elements
         recyclerViewProducts = findViewById(R.id.recyclerViewProducts);
+        searchEditText = findViewById(R.id.searchEditText); // Initialize search field
         editForm = findViewById(R.id.editForm);
         editTextItemName = findViewById(R.id.editTextItemName);
         editTextDescription = findViewById(R.id.editTextDescription);
@@ -67,10 +74,10 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
         buttonCancel = findViewById(R.id.buttonCancel);
 
         // Check for null views
-        if (recyclerViewProducts == null || editForm == null || editTextItemName == null ||
-                editTextPrice == null || editTextImageUrl == null || spinnerCategory == null ||
-                buttonSave == null || buttonCancel == null) {
-            Log.e(TAG, "One or more UI elements not found");
+        if (recyclerViewProducts == null || searchEditText == null || editForm == null ||
+                editTextItemName == null || editTextPrice == null || editTextImageUrl == null ||
+                spinnerCategory == null || buttonSave == null || buttonCancel == null) {
+            Log.e(TAG, "One Exploration or more UI elements not found");
             Toast.makeText(this, "UI initialization error", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -88,7 +95,8 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
         // Initialize RecyclerView
         recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this));
         productList = new ArrayList<>();
-        adapter = new EditProductAdapter(this, productList, this);
+        filteredProductList = new ArrayList<>(); // Initialize filtered list
+        adapter = new EditProductAdapter(this, filteredProductList, this);
         recyclerViewProducts.setAdapter(adapter);
 
         // Load products
@@ -114,13 +122,18 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
         // Set up button listeners
         buttonSave.setOnClickListener(v -> saveChanges());
         buttonCancel.setOnClickListener(v -> hideEditForm());
+
+        // Set up search functionality
+        setupSearch();
     }
 
     private void loadProducts() {
         try {
             productList.clear();
+            filteredProductList.clear();
             List<Product> products = dbHelper.getAllProducts();
             productList.addAll(products);
+            filteredProductList.addAll(products);
             adapter.notifyDataSetChanged();
             Log.d(TAG, "Loaded " + products.size() + " products");
             if (products.isEmpty()) {
@@ -132,6 +145,37 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
         }
     }
 
+    private void setupSearch() {
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filterProducts(s.toString());
+            }
+        });
+    }
+
+    private void filterProducts(String query) {
+        filteredProductList.clear();
+        if (TextUtils.isEmpty(query)) {
+            filteredProductList.addAll(productList);
+        } else {
+            String lowerCaseQuery = query.toLowerCase();
+            for (Product product : productList) {
+                if (product.getName().toLowerCase().contains(lowerCaseQuery)) {
+                    filteredProductList.add(product);
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
+        Log.d(TAG, "Filtered products: " + filteredProductList.size());
+    }
+
     @Override
     public void onProductEdit(Product product) {
         selectedProduct = product;
@@ -141,13 +185,11 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
     private void showEditForm() {
         if (selectedProduct == null) return;
 
-        // Populate the form with the selected product's details
         editTextItemName.setText(selectedProduct.getName());
         editTextDescription.setText(selectedProduct.getDescription());
         editTextPrice.setText(String.valueOf(selectedProduct.getPrice()));
         editTextImageUrl.setText(selectedProduct.getImageUrl());
 
-        // Set the spinner to the product's current category
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinnerCategory.getAdapter();
         if (adapter != null) {
             int position = adapter.getPosition(selectedProduct.getCategory());
@@ -156,13 +198,12 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
             }
         }
 
-        // Show the edit form and hide the product list
         editForm.setVisibility(View.VISIBLE);
         recyclerViewProducts.setVisibility(View.GONE);
+        searchEditText.setVisibility(View.GONE); // Hide search when editing
     }
 
     private void hideEditForm() {
-        // Clear the form and hide it
         editTextItemName.setText("");
         editTextDescription.setText("");
         editTextPrice.setText("");
@@ -172,6 +213,7 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
 
         editForm.setVisibility(View.GONE);
         recyclerViewProducts.setVisibility(View.VISIBLE);
+        searchEditText.setVisibility(View.VISIBLE); // Show search when not editing
     }
 
     private void saveChanges() {
@@ -186,7 +228,6 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
         String imageUrl = editTextImageUrl.getText().toString().trim();
         String category;
 
-        // Check if spinner has a selected item
         if (spinnerCategory.getSelectedItem() == null) {
             Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "No category selected in spinner");
@@ -194,7 +235,6 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
         }
         category = spinnerCategory.getSelectedItem().toString();
 
-        // Validate inputs (imageUrl is optional)
         if (TextUtils.isEmpty(name)) {
             editTextItemName.setError("Name is required");
             Log.w(TAG, "Name is empty");
@@ -211,13 +251,11 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
             return;
         }
 
-        // Allow imageUrl to be null or empty
         if (TextUtils.isEmpty(imageUrl)) {
             imageUrl = null;
             Log.d(TAG, "No image URL provided, setting to null");
         }
 
-        // Sanitize description to prevent SQL issues
         if (!TextUtils.isEmpty(description)) {
             description = description.replace("'", "''");
         } else {
@@ -243,13 +281,12 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
                     ", Image: " + (imageUrl == null ? "null" : imageUrl) + ", Category: " + category + ", Description: " + (description == null ? "null" : description));
             dbHelper.updateProduct(selectedProduct.getId(), name, price, imageUrl, category, description);
 
-            // Update the local product list
             selectedProduct = new Product(selectedProduct.getId(), name, price, imageUrl, category, description);
             int index = productList.indexOf(selectedProduct);
             if (index >= 0) {
                 productList.set(index, selectedProduct);
-                adapter.notifyDataSetChanged();
             }
+            loadProducts(); // Reload and filter products
 
             Toast.makeText(this, "Product updated successfully", Toast.LENGTH_SHORT).show();
             hideEditForm();
@@ -265,5 +302,14 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
             dbHelper.close();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

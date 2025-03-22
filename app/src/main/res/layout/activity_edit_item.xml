@@ -3,24 +3,41 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbarWithBackArrow"
+        layout="@layout/toolbar_with_back_arrow"/>
 
     <!-- Title -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Edit Items"
+        android:padding="16dp"
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:paddingBottom="16dp"/>
+        android:paddingBottom="8dp"/>
+
+    <!-- Search Bar -->
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search products..."
+        android:padding="8dp"
+        android:layout_margin="16dp"
+        android:background="@android:drawable/edit_text"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp"/>
 
     <!-- RecyclerView to list products -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewProducts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:padding="16dp"
         android:layout_weight="1"
         android:visibility="visible"/>
 
@@ -106,5 +123,4 @@
                 android:textColor="@android:color/white"/>
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
