@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -17,38 +17,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.adapters.EditProductAdapter;
 import com.example.myapplication.models.CategoryViewModel;
 import com.example.myapplication.models.Product;
 import com.example.myapplication.utils.DatabaseHelper;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class EditItemActivity extends AppCompatActivity implements EditProductAdapter.OnProductEditListener {
-    private static final String TAG = "EditItemActivity";
-    private RecyclerView recyclerViewProducts;
-    private EditProductAdapter adapter;
-    private List<Product> productList;
+public class AddItemActivity extends AppCompatActivity {
+    private static final String TAG = "AddItemActivity";
+    private EditText editTextItemName, editTextDescription, editTextPrice, editTextImageUrl;
+    private Button buttonAddItem;
+    private Spinner spinnerCategory;
+    private ImageView imageViewItem;
     private DatabaseHelper dbHelper;
     private CategoryViewModel categoryViewModel;
-
-    // Edit form views
-    private LinearLayout editForm;
-    private EditText editTextItemName, editTextDescription, editTextPrice, editTextImageUrl;
-    private Spinner spinnerCategory;
-    private Button buttonSave, buttonCancel;
-    private Product selectedProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_edit_item);
+        setContentView(R.layout.activity_add_item);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -56,20 +47,17 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
         });
 
         // Initialize UI elements
-        recyclerViewProducts = findViewById(R.id.recyclerViewProducts);
-        editForm = findViewById(R.id.editForm);
         editTextItemName = findViewById(R.id.editTextItemName);
         editTextDescription = findViewById(R.id.editTextDescription);
         editTextPrice = findViewById(R.id.editTextPrice);
         editTextImageUrl = findViewById(R.id.editTextImageUrl);
+        buttonAddItem = findViewById(R.id.buttonAddItem);
         spinnerCategory = findViewById(R.id.spinnerCategory);
-        buttonSave = findViewById(R.id.buttonSave);
-        buttonCancel = findViewById(R.id.buttonCancel);
+        imageViewItem = findViewById(R.id.imageViewItem);
 
         // Check for null views
-        if (recyclerViewProducts == null || editForm == null || editTextItemName == null ||
-                editTextPrice == null || editTextImageUrl == null || spinnerCategory == null ||
-                buttonSave == null || buttonCancel == null) {
+        if (editTextItemName == null || editTextPrice == null || editTextImageUrl == null ||
+                buttonAddItem == null || spinnerCategory == null) {
             Log.e(TAG, "One or more UI elements not found");
             Toast.makeText(this, "UI initialization error", Toast.LENGTH_SHORT).show();
             return;
@@ -84,15 +72,6 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
             Toast.makeText(this, "Database error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }
-
-        // Initialize RecyclerView
-        recyclerViewProducts.setLayoutManager(new LinearLayoutManager(this));
-        productList = new ArrayList<>();
-        adapter = new EditProductAdapter(this, productList, this);
-        recyclerViewProducts.setAdapter(adapter);
-
-        // Load products
-        loadProducts();
 
         // Initialize CategoryViewModel
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
@@ -111,75 +90,11 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
             Log.d(TAG, "Spinner populated with " + categories.size() + " categories");
         });
 
-        // Set up button listeners
-        buttonSave.setOnClickListener(v -> saveChanges());
-        buttonCancel.setOnClickListener(v -> hideEditForm());
+        // Set up listener
+        buttonAddItem.setOnClickListener(v -> addItemToDatabase());
     }
 
-    private void loadProducts() {
-        try {
-            productList.clear();
-            List<Product> products = dbHelper.getAllProducts();
-            productList.addAll(products);
-            adapter.notifyDataSetChanged();
-            Log.d(TAG, "Loaded " + products.size() + " products");
-            if (products.isEmpty()) {
-                Toast.makeText(this, "No products available to edit", Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error loading products: " + e.getMessage());
-            Toast.makeText(this, "Failed to load products: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onProductEdit(Product product) {
-        selectedProduct = product;
-        showEditForm();
-    }
-
-    private void showEditForm() {
-        if (selectedProduct == null) return;
-
-        // Populate the form with the selected product's details
-        editTextItemName.setText(selectedProduct.getName());
-        editTextDescription.setText(selectedProduct.getDescription());
-        editTextPrice.setText(String.valueOf(selectedProduct.getPrice()));
-        editTextImageUrl.setText(selectedProduct.getImageUrl());
-
-        // Set the spinner to the product's current category
-        ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinnerCategory.getAdapter();
-        if (adapter != null) {
-            int position = adapter.getPosition(selectedProduct.getCategory());
-            if (position >= 0) {
-                spinnerCategory.setSelection(position);
-            }
-        }
-
-        // Show the edit form and hide the product list
-        editForm.setVisibility(View.VISIBLE);
-        recyclerViewProducts.setVisibility(View.GONE);
-    }
-
-    private void hideEditForm() {
-        // Clear the form and hide it
-        editTextItemName.setText("");
-        editTextDescription.setText("");
-        editTextPrice.setText("");
-        editTextImageUrl.setText("");
-        spinnerCategory.setSelection(0);
-        selectedProduct = null;
-
-        editForm.setVisibility(View.GONE);
-        recyclerViewProducts.setVisibility(View.VISIBLE);
-    }
-
-    private void saveChanges() {
-        if (selectedProduct == null) {
-            Toast.makeText(this, "No product selected", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+    private void addItemToDatabase() {
         String name = editTextItemName.getText().toString().trim();
         String description = editTextDescription.getText().toString().trim();
         String priceStr = editTextPrice.getText().toString().trim();
@@ -219,9 +134,9 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
 
         // Sanitize description to prevent SQL issues
         if (!TextUtils.isEmpty(description)) {
-            description = description.replace("'", "''");
+            description = description.replace("'", "''"); // Escape single quotes
         } else {
-            description = null;
+            description = null; // Set to null if empty
         }
 
         double price;
@@ -238,25 +153,35 @@ public class EditItemActivity extends AppCompatActivity implements EditProductAd
             return;
         }
 
+        String productId = UUID.randomUUID().toString();
         try {
-            Log.d(TAG, "Updating product - ID: " + selectedProduct.getId() + ", Name: " + name + ", Price: " + price +
+            Log.d(TAG, "Attempting to add product - ID: " + productId + ", Name: " + name + ", Price: " + price +
                     ", Image: " + (imageUrl == null ? "null" : imageUrl) + ", Category: " + category + ", Description: " + (description == null ? "null" : description));
-            dbHelper.updateProduct(selectedProduct.getId(), name, price, imageUrl, category, description);
+            dbHelper.addProduct(productId, name, price, imageUrl, category, description);
+            Log.d(TAG, "Product added successfully - ID: " + productId);
 
-            // Update the local product list
-            selectedProduct = new Product(selectedProduct.getId(), name, price, imageUrl, category, description);
-            int index = productList.indexOf(selectedProduct);
-            if (index >= 0) {
-                productList.set(index, selectedProduct);
-                adapter.notifyDataSetChanged();
+            // Verify immediately
+            List<Product> products = dbHelper.getAllProducts();
+            Log.d(TAG, "Total products in DB after add: " + products.size());
+            for (Product p : products) {
+                Log.d(TAG, "Product: " + p.getName() + ", Image: " + p.getImageUrl());
             }
 
-            Toast.makeText(this, "Product updated successfully", Toast.LENGTH_SHORT).show();
-            hideEditForm();
+            Toast.makeText(this, "Item added successfully", Toast.LENGTH_SHORT).show();
+            clearInputFields();
+            finish();
         } catch (Exception e) {
-            Log.e(TAG, "Error updating product: " + e.getMessage(), e);
-            Toast.makeText(this, "Failed to update product: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Error adding product to database: " + e.getMessage(), e);
+            Toast.makeText(this, "Failed to add item: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void clearInputFields() {
+        editTextItemName.setText("");
+        editTextDescription.setText("");
+        editTextPrice.setText("");
+        editTextImageUrl.setText("");
+        imageViewItem.setVisibility(View.GONE);
     }
 
     @Override

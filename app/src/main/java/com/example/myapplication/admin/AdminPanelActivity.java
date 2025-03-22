@@ -19,6 +19,7 @@ public class AdminPanelActivity extends AppCompatActivity implements View.OnClic
     private CardView cardAddRemoveItems;
     private CardView cardEditItem;
     private CardView cardUserList;
+    private CardView cardRemoveItems; // Added for the "Remove Items" card
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +34,17 @@ public class AdminPanelActivity extends AppCompatActivity implements View.OnClic
 
         // Initialize CardViews
         cardAddRemoveCategory = findViewById(R.id.cardAddRemoveCategory);
-        cardAddRemoveItems = findViewById(R.id.cardAddRemoveItems);
+        cardAddRemoveItems = findViewById(R.id.cardAdd_Items); // Updated ID to match XML
         cardEditItem = findViewById(R.id.cardEditItem);
         cardUserList = findViewById(R.id.cardUserList);
+        cardRemoveItems = findViewById(R.id.Remove_tems); // Initialize the "Remove Items" card
 
         // Set OnClickListeners
         cardAddRemoveCategory.setOnClickListener(this);
         cardAddRemoveItems.setOnClickListener(this);
         cardEditItem.setOnClickListener(this);
         cardUserList.setOnClickListener(this);
+        cardRemoveItems.setOnClickListener(this); // Set listener for the "Remove Items" card
     }
 
     @Override
@@ -49,12 +52,14 @@ public class AdminPanelActivity extends AppCompatActivity implements View.OnClic
         Intent intent = null;
         if (v.getId() == R.id.cardAddRemoveCategory) {
             intent = new Intent(this, AddRemoveCategoryActivity.class); // Replace with your actual activity
-        } else if (v.getId() == R.id.cardAddRemoveItems) {
-            intent = new Intent(this, AddRemoveItemActivity.class); // Replace with your actual activity
+        } else if (v.getId() == R.id.cardAdd_Items) { // Updated ID to match XML
+            intent = new Intent(this, AddItemActivity.class); // Replace with your actual activity
         } else if (v.getId() == R.id.cardEditItem) {
             intent = new Intent(this, EditItemActivity.class); // Replace with your actual activity
         } else if (v.getId() == R.id.cardUserList) {
             intent = new Intent(this, UserListActivity.class); // Replace with your actual activity
+        } else if (v.getId() == R.id.Remove_tems) { // Handle click for "Remove Items"
+            intent = new Intent(this, RemoveItemsActivity.class); // Replace with your actual activity
         }
 
         if (intent != null) {

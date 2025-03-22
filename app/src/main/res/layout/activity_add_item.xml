@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".admin.AddRemoveItemActivity">
+    tools:context=".admin.AddItemActivity">
 
     <include
         android:id="@+id/toolbarWithBackArrow"
@@ -31,7 +31,7 @@
                 android:id="@+id/textViewTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add / Remove Item"
+                android:text="Add Item"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="24dp"
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Price"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="16dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextPrice"
                     android:layout_width="match_parent"
@@ -81,12 +81,25 @@
                     android:inputType="numberDecimal"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                android:id="@+id/buttonSelectItemImage"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutImageUrl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select Image"
-                android:layout_marginBottom="8dp"/>
+                android:hint="Image URL"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_marginBottom="16dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextImageUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/spinnerCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"/>
 
             <ImageView
                 android:id="@+id/imageViewItem"
@@ -97,35 +110,14 @@
                 android:visibility="gone"
                 android:scaleType="centerCrop"/>
 
-            <LinearLayout
+            <Button
+                android:id="@+id/buttonAddItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:text="Add Item"
                 android:layout_marginTop="32dp"
-                android:gravity="center">
-
-                <Button
-                    android:id="@+id/buttonAddItem"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Add Item"
-                    android:layout_marginEnd="8dp"
-                    style="@style/Widget.MaterialComponents.Button"/>
-
-                <Button
-                    android:id="@+id/buttonRemoveItem"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Remove Item"
-                    android:layout_marginStart="8dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
-
-            </LinearLayout>
+                style="@style/Widget.MaterialComponents.Button"/>
 
         </LinearLayout>
-
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
