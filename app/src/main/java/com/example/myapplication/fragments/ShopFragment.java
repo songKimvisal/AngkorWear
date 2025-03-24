@@ -1,22 +1,25 @@
 package com.example.myapplication.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ProductAdapter;
 import com.example.myapplication.models.Product;
+import com.example.myapplication.models.CategoryViewModel;
 import com.example.myapplication.utils.DatabaseHelper;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -24,34 +27,46 @@ import java.util.Collections;
 import java.util.List;
 
 public class ShopFragment extends Fragment {
+    private static final String TAG = "ShopFragment";
     private RecyclerView recyclerView;
     private ProductAdapter adapter;
     private List<Product> productList, filteredList;
-    private Chip chipWomen, chipMen, chipKids, chipSortPrice;
+    private ChipGroup chipGroup;
+    private CategoryViewModel categoryViewModel;
     private DatabaseHelper dbHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView started");
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
 
         recyclerView = view.findViewById(R.id.shop_recycler_view);
-        chipWomen = view.findViewById(R.id.chip_women);
-        chipMen = view.findViewById(R.id.chip_men);
-        chipKids = view.findViewById(R.id.chip_kids);
-        chipSortPrice = view.findViewById(R.id.chip_sort_price);
+        chipGroup = view.findViewById(R.id.chip_group);
+        TextInputEditText searchInput = view.findViewById(R.id.search_input);
 
-        // Initialize DatabaseHelper
-        dbHelper = new DatabaseHelper(getContext());
+        if (recyclerView == null || chipGroup == null || searchInput == null) {
+            Log.e(TAG, "One or more views not found in layout");
+            return view;
+        }
 
-        // Fetch products from the database
-        productList = dbHelper.getAllProducts();
-        filteredList = new ArrayList<>(productList);
+        if (getContext() != null) {
+            dbHelper = new DatabaseHelper(getContext());
+        } else {
+            Log.e(TAG, "Context is null");
+            return view;
+        }
+
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        productList = new ArrayList<>();
+        filteredList = new ArrayList<>();
         adapter = new ProductAdapter(getContext(), filteredList);
         recyclerView.setAdapter(adapter);
 
-        // Search functionality
-        TextInputEditText searchInput = view.findViewById(R.id.search_input);
+        loadProductsFromDatabase();
+
+        categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
+        categoryViewModel.getCategoryList().observe(getViewLifecycleOwner(), this::setupCategoryChips);
+
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -63,18 +78,43 @@ public class ShopFragment extends Fragment {
             }
         });
 
-        // Category filters
-        chipWomen.setOnClickListener(v -> filterByCategory("Women"));
-        chipMen.setOnClickListener(v -> filterByCategory("Men"));
-        chipKids.setOnClickListener(v -> filterByCategory("Kids"));
+        return view;
+    }
 
-        // Sort by price
-        chipSortPrice.setOnClickListener(v -> {
+    private void loadProductsFromDatabase() {
+        try {
+            productList.clear();
+            List<Product> products = dbHelper.getAllProducts();
+            productList.addAll(products);
+            filteredList.clear();
+            filteredList.addAll(productList);
+            adapter.notifyDataSetChanged();
+            Log.d(TAG, "Loaded " + products.size() + " products");
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading products: " + e.getMessage());
+        }
+    }
+
+    private void setupCategoryChips(List<String> categoryList) {
+        if (categoryList == null) return;
+        chipGroup.removeAllViews();
+        for (String category : categoryList) {
+            Chip newChip = new Chip(getContext());
+            newChip.setId(View.generateViewId());
+            newChip.setText(category);
+            newChip.setCheckable(true);
+            newChip.setOnClickListener(v -> filterByCategory(category));
+            chipGroup.addView(newChip);
+        }
+        Chip sortChip = new Chip(getContext());
+        sortChip.setId(View.generateViewId());
+        sortChip.setText("Sort by Price");
+        sortChip.setCheckable(true);
+        sortChip.setOnClickListener(v -> {
             Collections.sort(filteredList, (p1, p2) -> Double.compare(p1.getPrice(), p2.getPrice()));
             adapter.notifyDataSetChanged();
         });
-
-        return view;
+        chipGroup.addView(sortChip);
     }
 
     private void filterProducts(String query) {
@@ -95,6 +135,12 @@ public class ShopFragment extends Fragment {
             }
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadProductsFromDatabase(); // Refresh product list when fragment resumes
     }
 
     @Override

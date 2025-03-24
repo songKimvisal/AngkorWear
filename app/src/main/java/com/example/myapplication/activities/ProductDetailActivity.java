@@ -15,13 +15,15 @@ import com.example.myapplication.R;
 import com.example.myapplication.models.CartItem;
 import com.example.myapplication.models.Product;
 import com.example.myapplication.utils.CartManager;
+import com.example.myapplication.utils.FavoritesManager;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
 public class ProductDetailActivity extends AppCompatActivity {
     private Product product;
-    private int quantity = 1; // Default quantity
+    private int quantity = 1;
+    private FavoritesManager favoritesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +39,18 @@ public class ProductDetailActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Product Details");
         }
 
+        // Get product from intent
         product = (Product) getIntent().getSerializableExtra("product");
+        if (product == null) {
+            Toast.makeText(this, "Product not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
+        // Initialize FavoritesManager
+        favoritesManager = FavoritesManager.getInstance();
+
+        // UI elements
         ImageView productImage = findViewById(R.id.product_image);
         TextView productName = findViewById(R.id.product_name);
         TextView productPrice = findViewById(R.id.product_price);
@@ -52,7 +64,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Set product details
         productName.setText(product.getName());
-        productPrice.setText("$" + product.getPrice());
+        productPrice.setText("$" + String.format("%.2f", product.getPrice()));
         productDescription.setText(product.getDescription());
         Glide.with(this).load(product.getImageUrl()).into(productImage);
 
@@ -79,8 +91,16 @@ public class ProductDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Added " + quantity + " " + product.getName() + "(s) to Cart", Toast.LENGTH_SHORT).show();
         });
 
-        // Favorite button
-        favoriteButton.setOnClickListener(v -> Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show());
+        // Favorite button (only adds, no toggle)
+        favoriteButton.setText("Add to Favorites"); // Ensure button text is static
+        favoriteButton.setOnClickListener(v -> {
+            if (!favoritesManager.isFavorite(product)) {
+                favoritesManager.addToFavorites(product);
+                Toast.makeText(this, "Added to Favorites", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Already in Favorites", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Checkout button
         checkoutButton.setOnClickListener(v -> {
@@ -94,5 +114,11 @@ public class ProductDetailActivity extends AppCompatActivity {
             intent.putExtra("totalPrice", cartManager.getTotalPrice());
             startActivity(intent);
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

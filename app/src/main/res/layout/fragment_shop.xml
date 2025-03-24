@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- TextInputLayout -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/search_input_layout"
         android:layout_width="0dp"
@@ -21,72 +20,27 @@
             android:hint="Search products" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- HorizontalScrollView with Chips -->
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
         app:layout_constraintTop_toBottomOf="@id/search_input_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Replace LinearLayout with ConstraintLayout -->
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <!-- Chip: Women -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_women"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Women"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/chip_men"
-                app:layout_constraintHorizontal_chainStyle="spread_inside" />
-
-            <!-- Chip: Men -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_men"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Men"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/chip_women"
-                app:layout_constraintEnd_toStartOf="@id/chip_kids" />
-
-            <!-- Chip: Kids -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_kids"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Kids"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/chip_men"
-                app:layout_constraintEnd_toStartOf="@id/chip_sort_price" />
-
-            <!-- Chip: Sort by Price -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_sort_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Sort by Price"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/chip_kids"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:chipSpacing="8dp"
+            app:singleLine="true">
+        </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shop_recycler_view"
         android:layout_width="0dp"
@@ -97,5 +51,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
