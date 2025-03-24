@@ -89,7 +89,7 @@ public class EditProductActivity extends AppCompatActivity {
         product.setCategory(category);
 
         // Delete the old product and add the updated one (since we don't have an update method)
-        dbHelper.deleteProductByName(product.getName());
+        dbHelper.deleteProduct(product.getName());
         dbHelper.addProduct(product.getId(), name, price, null, category, description);
 
         Toast.makeText(this, "Product updated successfully", Toast.LENGTH_SHORT).show();
