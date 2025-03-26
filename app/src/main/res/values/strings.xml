@@ -17,9 +17,18 @@
     <string name="settings">Settings</string>
     <string name="notifications_password">Edit Account</string>
     <string name="logout">Logout</string>
+    <string name="carousel_indicators_description" />
     <string-array name="payment_methods">
         <item>Credit Card</item>
         <item>PayPal</item>
         <item>Cash on Delivery</item>
+    </string-array>
+    <string name="size_selector_description">Select product size</string>
+    <string name="sizes_description" />
+    <string-array name="product_sizes">
+        <item>S</item>
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
     </string-array>
 </resources>

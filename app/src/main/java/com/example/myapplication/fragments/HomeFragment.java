@@ -4,10 +4,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager; // Changed to GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +44,7 @@ public class HomeFragment extends Fragment {
         setupCarousel();
 
         // Setup products RecyclerView
-        productsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        List<Product> productList = getSampleProducts();
-        ProductAdapter productAdapter = new ProductAdapter(getContext(), productList);
-        productsRecyclerView.setAdapter(productAdapter);
+        setupRecyclerView();
 
         return view;
     }
@@ -64,11 +60,10 @@ public class HomeFragment extends Fragment {
         carouselAdapter = new CarouselAdapter(getContext(), carouselImages);
         carouselViewPager.setAdapter(carouselAdapter);
 
-        // Connect TabLayout with ViewPager2
-        new TabLayoutMediator(carouselIndicators, carouselViewPager,
-                (tab, position) -> {
-                    // No title needed for dots
-                }).attach();
+        // Connect TabLayout with ViewPager2 and improve accessibility
+        new TabLayoutMediator(carouselIndicators, carouselViewPager, (tab, position) -> {
+            tab.setContentDescription("Slide " + (position + 1) + ": Carousel Image");
+        }).attach();
 
         // Auto-scroll implementation
         carouselRunnable = new Runnable() {
@@ -95,10 +90,23 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void setupRecyclerView() {
+        // Use GridLayoutManager with 2 columns
+        productsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2)); // 2 columns
+        productsRecyclerView.setNestedScrollingEnabled(false); // Ensure NestedScrollView handles scrolling
+        List<Product> productList = getSampleProducts();
+        ProductAdapter productAdapter = new ProductAdapter(getContext(), productList);
+        productsRecyclerView.setAdapter(productAdapter);
+    }
+
     private List<Product> getSampleProducts() {
         List<Product> list = new ArrayList<>();
-        list.add(new Product("1", "Shirt", 29.99, "https://placecats.com/millie/300/150", "Men", "Hello"));
-        list.add(new Product("2", "Dress", 49.99, "https://placecats.com/leo/300/150", "Women", "Hello"));
+        list.add(new Product("1", "Shirt", 59.99, "https://shoparitmetik.com/cdn/shop/files/selected-slim-fit-shirt-navy-selected-shirt-shop-namemontreal-224052.jpg?v=1729703414", "Men", "SELECTED - SLIM FIT SHIRT - NAVY"));
+        list.add(new Product("2", "Shirt", 49.99, "https://shoparitmetik.com/cdn/shop/files/selected-slim-fit-shirt-beige-selected-shirt-shop-namemontreal-121722_460x.jpg?v=1730863493", "Men", "SELECTED - SLIM FIT SHIRT - BEIGE"));
+        list.add(new Product("3", "Dress", 79.99, "https://mahezon.in/cdn/shop/files/IMG-20240527_221759_161_500x641_crop_center.jpg?v=1716829415", "Women", "Party Wear Women Black Dress Floral Women Midi Frock Dress"));
+        list.add(new Product("4", "Jacket", 89.99, "https://www.side-step.co.za/media/catalog/product/cache/ead79d362eadd98297170252f181cb50/v/l/vlt26b-voltage-parka-black-volw24-0016a-v1_jpg.jpg", "Men", "Voltage Mens Parka Jacket Black"));
+        list.add(new Product("5", "Pants", 39.99, "https://amaioofficial.com/cdn/shop/files/A7a043f4d30bc4a93bf39310eaa72aa18w.webp?v=1705740268", "Women", "Women Y2K Cargo Pants High Waist Streetwear Hip Hop Trousers"));
+        list.add(new Product("6", "Sweater", 69.99, "https://assets.ajio.com/medias/sys_master/root/h20/hea/14858211754014/-473Wx593H-460439786-lightpink-MARKETING.jpg", "Women", "Knitted High-Neck Pullover with Drop-Shoulders"));
         return list;
     }
 

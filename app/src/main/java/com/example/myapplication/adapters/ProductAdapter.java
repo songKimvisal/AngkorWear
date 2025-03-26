@@ -33,19 +33,28 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         Product product = productList.get(position);
         holder.productName.setText(product.getName());
-        holder.productPrice.setText("$" + product.getPrice());
-        Glide.with(context).load(product.getImageUrl()).into(holder.productImage);
+        holder.productPrice.setText(String.format("$%.2f", product.getPrice())); // Improved price formatting
+        Glide.with(context)
+                .load(product.getImageUrl())
+                .placeholder(R.drawable.placeholder_image) // Optional: Add placeholde
+                .into(holder.productImage);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetailActivity.class);
-            intent.putExtra("product", product);
+            intent.putExtra("product", product); // Product is Serializable, so this works
             context.startActivity(intent);
         });
     }
 
     @Override
     public int getItemCount() {
-        return productList.size();
+        return productList != null ? productList.size() : 0; // Null check for safety
+    }
+
+    // Method to update product list dynamically
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+        notifyDataSetChanged();
     }
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {

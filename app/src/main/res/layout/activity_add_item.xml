@@ -94,6 +94,21 @@
                     android:inputType="textUri"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutSizes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Sizes (e.g., S, M, L)"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_marginBottom="16dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextSizes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:contentDescription="@string/sizes_description"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Spinner
                 android:id="@+id/spinnerCategory"
                 android:layout_width="match_parent"
