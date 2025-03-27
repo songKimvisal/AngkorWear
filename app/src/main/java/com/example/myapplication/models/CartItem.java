@@ -7,10 +7,12 @@ public class CartItem implements Parcelable {
     private String name;
     private double price;
     private int quantity;
+    private String size;
 
-    public CartItem(String name, double price, int quantity) {
+    public CartItem(String name, double price, int quantity,String size) {
         this.name = name;
         this.price = price;
+        this.size = size;
         this.quantity = quantity;
     }
 
@@ -27,6 +29,7 @@ public class CartItem implements Parcelable {
         return quantity;
     }
 
+    public String getSize() {return size;}
     // Setter for quantity
     public void setQuantity(int quantity) {
         this.quantity = quantity;
@@ -37,6 +40,7 @@ public class CartItem implements Parcelable {
         name = in.readString();
         price = in.readDouble();
         quantity = in.readInt();
+        size = in.readString();
     }
 
     public static final Creator<CartItem> CREATOR = new Creator<CartItem>() {
@@ -56,6 +60,7 @@ public class CartItem implements Parcelable {
         dest.writeString(name);
         dest.writeDouble(price);
         dest.writeInt(quantity);
+        dest.writeString(size);
     }
 
     @Override

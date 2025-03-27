@@ -31,6 +31,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.cartItemName.setText(cartItem.getName());
         holder.cartItemQuantity.setText("Qty: " + cartItem.getQuantity());
         holder.cartItemPrice.setText(String.format("$%.2f", cartItem.getPrice() * cartItem.getQuantity()));
+        holder.cartItemSize.setText("Size: " + cartItem.getSize());
     }
 
     @Override
@@ -39,13 +40,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     static class CartViewHolder extends RecyclerView.ViewHolder {
-        TextView cartItemName, cartItemQuantity, cartItemPrice;
+        TextView cartItemName, cartItemQuantity, cartItemPrice, cartItemSize;
 
         CartViewHolder(View itemView) {
             super(itemView);
             cartItemName = itemView.findViewById(R.id.cart_item_name);
             cartItemQuantity = itemView.findViewById(R.id.cart_item_quantity);
             cartItemPrice = itemView.findViewById(R.id.cart_item_price);
+            cartItemSize = itemView.findViewById(R.id.cart_item_size);
         }
     }
 }

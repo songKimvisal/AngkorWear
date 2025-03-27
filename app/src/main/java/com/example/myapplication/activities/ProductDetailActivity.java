@@ -2,8 +2,10 @@ package com.example.myapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private Product product;
     private int quantity = 1;
     private FavoritesManager favoritesManager;
+    private Spinner sizeSpinner;
+    private String selectedSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,14 @@ public class ProductDetailActivity extends AppCompatActivity {
         MaterialButton addToCartButton = findViewById(R.id.add_to_cart_button);
         MaterialButton favoriteButton = findViewById(R.id.favorite_button);
         MaterialButton checkoutButton = findViewById(R.id.checkout_button);
+        sizeSpinner = findViewById(R.id.size_spinner);
+
+        // Set up size spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.product_sizes, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sizeSpinner.setAdapter(adapter);
+        selectedSize = sizeSpinner.getSelectedItem().toString();
 
         // Set product details
         productName.setText(product.getName());
@@ -86,13 +98,15 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // Add to Cart button
         addToCartButton.setOnClickListener(v -> {
-            CartItem cartItem = new CartItem(product.getName(), product.getPrice(), quantity);
+            selectedSize = sizeSpinner.getSelectedItem().toString();
+            CartItem cartItem = new CartItem(product.getName(), product.getPrice(), quantity, selectedSize);
             CartManager.getInstance().addToCart(cartItem);
-            Toast.makeText(this, "Added " + quantity + " " + product.getName() + "(s) to Cart", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Added " + quantity + " " + product.getName() +
+                    " (Size: " + selectedSize + ") to Cart", Toast.LENGTH_SHORT).show();
         });
 
         // Favorite button (only adds, no toggle)
-        favoriteButton.setText("Add to Favorites"); // Ensure button text is static
+        favoriteButton.setText("Add to Favorites");
         favoriteButton.setOnClickListener(v -> {
             if (!favoritesManager.isFavorite(product)) {
                 favoritesManager.addToFavorites(product);
