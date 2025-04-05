@@ -3,7 +3,7 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Functionality](#functionality)
-- [Technologies and Tools](#technologies-and-tools)
+- [Technologies and Tools](#🚀-Technologies-and-Tools)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [License](#license)
