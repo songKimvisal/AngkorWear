@@ -44,11 +44,7 @@ An Android-based e-commerce platform built with Java, designed for seamless buyi
   <img width="12" />
 </div>
 
-## 📋 Overview
-
-This Android application, built in **Java** using **Android Studio**, serves as an e-commerce platform for buying and selling products. It’s a team effort hosted on GitHub, combining robust functionality with a clean, user-friendly design.
-
-## 🛠️ Prerequisites
+## Prerequisites
 
 To set up and run this project, ensure you have:
 
@@ -60,3 +56,20 @@ To set up and run this project, ensure you have:
     - Minimum SDK: 24
     - Target SDK: 34 (or 35)
 - **Java**: JDK 11
+
+## Installation
+You can "git clone" this repository via https or ssh
+* HTTPS
+  ```sh
+  git clone https://github.com/Sithi-sak/lost-and-found-mobile-app.git
+  ```
+* SSH
+  ```sh
+  git clone git@github.com:Sithi-sak/lost-and-found-mobile-app.git
+  ```
+
+> [!WARNING]
+> For SSH, you would need to set up a SSH key and add it to Github
+
+## License
+This project is licensed under the **Apache 2.0 License**. See the [LICENSE](LICENSE) file for details.
