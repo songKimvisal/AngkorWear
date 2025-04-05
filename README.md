@@ -5,7 +5,7 @@
 - [Functionality](#functionality)
 - [Technologies and Tools](#technologies-and-tools)
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
+- [Get started](#get-started)
 - [License](#license)
 
 ## Overview
