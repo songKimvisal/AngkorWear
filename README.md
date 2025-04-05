@@ -61,7 +61,7 @@ To set up and run this project, ensure you have:
 You can "git clone" this repository via https or ssh
 * HTTPS
   ```sh
-  git clone https://github.com/Sithi-sak/lost-and-found-mobile-app.git
+  git clone https://github.com/songKimvisal/AngkorWear.git
   ```
 * SSH
   ```sh
