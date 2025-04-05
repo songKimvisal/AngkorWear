@@ -3,7 +3,7 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Functionality](#functionality)
-- [Technologies and Tools](#🚀-Technologies-and-Tools)
+- [Technologies and Tools](#technologies-and-tools)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [License](#license)
@@ -28,7 +28,7 @@ An Android-based e-commerce platform built with Java, designed for seamless buyi
 - [x] **View products** - Monitor the product catalog.
 - [x] **Delete a product** - Remove items from the store.
 
-## 🚀 Technologies and Tools
+## Technologies and Tools
 <div align="left">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" height="30" alt="java logo"  />
   <img width="12" />
