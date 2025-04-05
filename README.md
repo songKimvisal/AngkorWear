@@ -1,5 +1,15 @@
 # 🛒 Ecommerce Mobile App Project
 
+## Table of Contents
+- [Overview](#overview)
+- [Features checklist](#features-checklist)
+- [Project Structure](#project-structure)
+- [Technologies and Tools](#technologies-and-tools)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [License](#license)
+
+## Overview
 An Android-based e-commerce platform built with Java, designed for seamless buying and selling experiences. This collaborative project is hosted on GitHub and leverages modern tools for development and design.
 
 ## ✨ Functionality
