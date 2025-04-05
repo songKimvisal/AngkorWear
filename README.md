@@ -3,7 +3,6 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Functionality](#functionality)
-- [Project Structure](#project-structure)
 - [Technologies and Tools](#technologies-and-tools)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
