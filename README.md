@@ -48,7 +48,7 @@ An Android-based e-commerce platform built with Java, designed for seamless buyi
 
 To set up and run this project, ensure you have:
 
-- **Android Studio**: Latest stable version (e.g., Chipmunk or higher)
+- **Android Studio**: Latest stable version
 - **Gradle**: 8.9 (managed via Gradle wrapper)
 - **Android SDK**:
     - SDK Platform 34 (or 35 if available)
@@ -57,7 +57,7 @@ To set up and run this project, ensure you have:
     - Target SDK: 34 (or 35)
 - **Java**: JDK 11
 
-## Installation
+## Get started
 You can "git clone" this repository via https or ssh
 * HTTPS
   ```sh
@@ -65,7 +65,7 @@ You can "git clone" this repository via https or ssh
   ```
 * SSH
   ```sh
-  git clone git@github.com:Sithi-sak/lost-and-found-mobile-app.git
+  git clone git@github.com:songKimvisal/AngkorWear.git
   ```
 
 > [!WARNING]
