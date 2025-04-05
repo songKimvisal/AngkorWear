@@ -2,7 +2,7 @@
 
 ## Table of Contents
 - [Overview](#overview)
-- [Features checklist](#functionality)
+- [Functionality](#functionality)
 - [Project Structure](#project-structure)
 - [Technologies and Tools](#technologies-and-tools)
 - [Prerequisites](#prerequisites)
@@ -12,7 +12,7 @@
 ## Overview
 An Android-based e-commerce platform built with Java, designed for seamless buying and selling experiences. This collaborative project is hosted on GitHub and leverages modern tools for development and design.
 
-## ✨ Functionality
+## Functionality
 
 ### Customer Features
 - [x] Select user option before login
