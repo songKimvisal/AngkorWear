@@ -1,8 +1,8 @@
 # 🛒 Ecommerce Mobile App Project
 
 ## Table of Contents
-- [Overview](#ovferview)
-- [Features checklist](#features-checklist)
+- [Overview](#overview)
+- [Features checklist](#functionality)
 - [Project Structure](#project-structure)
 - [Technologies and Tools](#technologies-and-tools)
 - [Prerequisites](#prerequisites)
